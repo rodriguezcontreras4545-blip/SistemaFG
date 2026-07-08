@@ -1,0 +1,18 @@
+{% extends "admin/change_form.html" %}
+
+{% block object-tools %}
+    {% if not change %}
+        <div class="alert alert-warning d-flex justify-content-between align-items-center mb-4 shadow-sm">
+            <div>
+                <i class="fas fa-layer-group fa-lg text-warning mr-2"></i>
+                <strong>¿Vas a registrar un lote de varias unidades del mismo modelo?</strong> 
+                Evita llenar este formulario uno por uno.
+            </div>
+            <a href="/inventario/ingreso/" class="btn btn-success font-weight-bold text-white">
+                <i class="fas fa-boxes mr-1"></i> Ir a Ingreso Masivo (Lotes)
+            </a>
+        </div>
+    {% endif %}
+    
+    {{ block.super }}
+{% endblock %}

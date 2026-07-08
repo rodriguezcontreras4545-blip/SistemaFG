@@ -1,0 +1,91 @@
+{% extends "admin/change_list.html" %}
+
+{% block object-tools %}
+    <!-- 1. Esto recupera el botón nativo de "Añadir Salida" de Jazzmin -->
+    {{ block.super }}
+    
+    <!-- 2. Esto añade tu botón personalizado de flujo masivo al costado -->
+    <a href="/inventario/salida/" class="btn btn-info btn-sm text-white font-weight-bold ml-2">
+        <i class="fas fa-shipping-fast mr-1"></i> Despacho Masivo (Salidas)
+    </a>
+{% endblock %}
+
+{% block result_list %}
+    {{ block.super }}
+    
+    <!-- Script del acordeón para apilar por número de guía -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const filas = document.querySelectorAll("#result_list tbody tr");
+            const guias = {};
+
+            filas.forEach(fila => {
+                const conCheck = fila.querySelector(".column-n_guia_salida");
+                if(!conCheck) return;
+                
+                const nGuia = conCheck.textContent.trim();
+                if (!guias[nGuia]) {
+                    guias[nGuia] = {
+                        cliente: fila.querySelector(".column-cliente").textContent.trim(),
+                        fecha: fila.querySelector(".column-fecha_salida").textContent.trim(),
+                        nodos: []
+                    };
+                }
+                guias[nGuia].nodos.push(fila);
+            });
+
+            const tbody = document.querySelector("#result_list tbody");
+            if(!tbody) return;
+            tbody.innerHTML = ""; 
+
+            let contadorGuia = 0;
+
+            Object.keys(guias).forEach(nGuia => {
+                contadorGuia++;
+                const datos = guias[nGuia];
+                const cantidadUnidades = datos.nodos.length;
+                const claseColapso = `detalle-guia-${contadorGuia}`;
+
+                const filaPadre = document.createElement("tr");
+                filaPadre.className = "bg-light font-weight-bold table-warning text-dark";
+                filaPadre.style.cursor = "pointer";
+                filaPadre.innerHTML = `
+                    <td class="text-center align-middle">
+                        <button type="button" class="btn btn-sm btn-dark btn-toggle-guia" data-target=".${claseColapso}">
+                            <i class="fas fa-chevron-down mr-1"></i> Ver Unidades
+                        </button>
+                    </td>
+                    <td class="align-middle">${nGuia}</td>
+                    <td class="align-middle text-center"><span class="badge badge-primary px-3 py-2" style="font-size:0.95rem;"><i class="fas fa-laptop mr-1"></i> ${cantidadUnidades} Unidades Despachadas</span></td>
+                    <td class="align-middle">${datos.cliente}</td>
+                    <td class="align-middle">${datos.fecha}</td>
+                `;
+                tbody.appendChild(filaPadre);
+
+                datos.nodos.forEach(filaHija => {
+                    filaHija.classList.add(claseColapso, "d-none", "bg-white");
+                    const celdaBoton = filaHija.cells[0];
+                    if(celdaBoton) celdaBoton.innerHTML = '<i class="fas fa-level-up-alt fa-rotate-90 text-muted ml-3"></i>';
+                    tbody.appendChild(filaHija);
+                });
+            });
+
+            document.querySelectorAll(".btn-toggle-guia").forEach(boton => {
+                boton.addEventListener("click", function(e) {
+                    e.stopPropagation();
+                    const targetSelector = this.getAttribute("data-target");
+                    const subFilas = document.querySelectorAll(targetSelector);
+                    const icono = this.querySelector("i");
+                    
+                    subFilas.forEach(f => f.classList.toggle("d-none"));
+                    
+                    if(icono.classList.contains("fa-chevron-down")) {
+                        icono.className = "fas fa-chevron-up mr-1";
+                    } else {
+                        icono.className = "fas fa-chevron-down mr-1";
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

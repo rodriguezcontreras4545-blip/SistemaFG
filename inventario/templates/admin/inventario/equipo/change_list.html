@@ -1,0 +1,10 @@
+{% extends "admin/change_list.html" %}
+
+{% block object-tools-items %}
+    {{ block.super }}
+    <li class="ml-2">
+        <a href="/inventario/ingreso/" class="btn btn-success btn-sm text-white font-weight-bold">
+            <i class="fas fa-plus-circle mr-1"></i> Ingreso Masivo (Lotes)
+        </a>
+    </li>
+{% endblock %}

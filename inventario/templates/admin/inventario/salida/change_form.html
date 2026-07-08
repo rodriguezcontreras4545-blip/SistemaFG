@@ -1,0 +1,17 @@
+{% extends "admin/change_form.html" %}
+
+{% block object-tools %}
+    {% if not change %}
+        <div class="alert alert-info d-flex justify-content-between align-items-center mb-4 shadow-sm">
+            <div>
+                <i class="fas fa-shipping-fast fa-lg text-info mr-2"></i>
+                <strong>¿Vas a despachar múltiples números de serie en esta misma guía?</strong>
+            </div>
+            <a href="/inventario/salida/" class="btn btn-info font-weight-bold text-white">
+                <i class="fas fa-truck-loading mr-1"></i> Ir a Despacho Masivo
+            </a>
+        </div>
+    {% endif %}
+    
+    {{ block.super }}
+{% endblock %}
