@@ -44,21 +44,8 @@ class EquipoAdmin(admin.ModelAdmin):
 @admin.register(Salida)
 class SalidaAdmin(admin.ModelAdmin):
     list_display = ('n_guia_salida', 'get_serie', 'get_detalles_equipo', 'cliente', 'fecha_salida')
-    
-    # 🔍 BARRA DE BÚSQUEDA DE SALIDAS:
-    # Busca despachos por nro de guía, cliente, o el número de serie de la laptop que se llevó.
     search_fields = ('n_guia_salida', 'cliente', 'equipo__numero_serie', 'equipo__modelo__marca', 'equipo__modelo__modelo')
-    
-    # 🌪️ PANELES DE FILTRADO PARA DESPACHOS:
-    # Filtra las salidas por cliente, tipo de producto vendido o por la fecha exacta en la que salió el camión.
-    list_filter = (
-        'fecha_salida',
-        'equipo__modelo__producto',
-        'equipo__modelo__marca',
-        'cliente',
-    )
-    
-    # Línea de tiempo superior para auditoría de salidas por fechas
+    list_filter = ('fecha_salida', 'equipo__modelo__producto', 'equipo__modelo__marca', 'cliente')
     date_hierarchy = 'fecha_salida'
 
     def get_serie(self, obj):
@@ -68,3 +55,10 @@ class SalidaAdmin(admin.ModelAdmin):
     def get_detalles_equipo(self, obj):
         return f"[{obj.equipo.modelo.producto}] {obj.equipo.modelo.marca} {obj.equipo.modelo.modelo}"
     get_detalles_equipo.short_description = 'Hardware Despachado'
+
+    # 👇 AÑADE ESTA FUNCIÓN AQUÍ 👇
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "equipo":
+            # Filtra automáticamente para mostrar SOLO los que están en stock
+            kwargs["queryset"] = Equipo.objects.filter(en_stock=True)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)

@@ -19,15 +19,16 @@
             const filas = document.querySelectorAll("#result_list tbody tr");
             const guias = {};
 
+            // 1. Agrupar las filas usando las clases correctas de Django (.field-nombre_campo)
             filas.forEach(fila => {
-                const conCheck = fila.querySelector(".column-n_guia_salida");
-                if(!conCheck) return;
+                const celdaGuia = fila.querySelector(".field-n_guia_salida");
+                if(!celdaGuia) return; // Si no encuentra la celda, salta a la siguiente fila
                 
-                const nGuia = conCheck.textContent.trim();
+                const nGuia = celdaGuia.textContent.trim();
                 if (!guias[nGuia]) {
                     guias[nGuia] = {
-                        cliente: fila.querySelector(".column-cliente").textContent.trim(),
-                        fecha: fila.querySelector(".column-fecha_salida").textContent.trim(),
+                        cliente: fila.querySelector(".field-cliente") ? fila.querySelector(".field-cliente").textContent.trim() : "-",
+                        fecha: fila.querySelector(".field-fecha_salida") ? fila.querySelector(".field-fecha_salida").textContent.trim() : "-",
                         nodos: []
                     };
                 }
@@ -36,16 +37,18 @@
 
             const tbody = document.querySelector("#result_list tbody");
             if(!tbody) return;
-            tbody.innerHTML = ""; 
+            tbody.innerHTML = ""; // Limpiamos la tabla plana
 
             let contadorGuia = 0;
 
+            // 2. Construir el Acordeón
             Object.keys(guias).forEach(nGuia => {
                 contadorGuia++;
                 const datos = guias[nGuia];
                 const cantidadUnidades = datos.nodos.length;
                 const claseColapso = `detalle-guia-${contadorGuia}`;
 
+                // Fila Maestra (La guía que agrupa)
                 const filaPadre = document.createElement("tr");
                 filaPadre.className = "bg-light font-weight-bold table-warning text-dark";
                 filaPadre.style.cursor = "pointer";
@@ -62,6 +65,7 @@
                 `;
                 tbody.appendChild(filaPadre);
 
+                // Filas Hijas (Los equipos)
                 datos.nodos.forEach(filaHija => {
                     filaHija.classList.add(claseColapso, "d-none", "bg-white");
                     const celdaBoton = filaHija.cells[0];
@@ -70,6 +74,7 @@
                 });
             });
 
+            // 3. Animación de despliegue
             document.querySelectorAll(".btn-toggle-guia").forEach(boton => {
                 boton.addEventListener("click", function(e) {
                     e.stopPropagation();
