@@ -87,7 +87,7 @@ DATABASES = {
         'NAME': 'bd_inventario_reacondicionados',
         'USER': 'joan_admin',                 # El nuevo usuario
         'PASSWORD': '5672',         # La contraseña que le asignamos
-        'HOST': '192.168.1.31',
+        'HOST': '192.168.1.200',
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
