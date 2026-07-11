@@ -64,7 +64,8 @@
                         <select name="modelo" id="modelo" class="form-control" required>
                             <option value="">-- Seleccione un Modelo del Catálogo --</option>
                             {% for m in modelos %}
-                                <option value="{{ m.id }}">{{ m.marca }} - {{ m.modelo }} ({{ m.procesador }} / {{ m.velocidad }}GHz)</option>
+                                <!-- Añadimos data-producto para que JavaScript conozca el tipo de hardware -->
+                                <option value="{{ m.id }}" data-producto="{{ m.producto }}">{{ m.marca }} - {{ m.modelo }} ({{ m.procesador }} / {{ m.velocidad }}GHz)</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -158,6 +159,41 @@
     const inputCantidad = document.getElementById('cantidad_unidades');
     const tablaSeriesContenedor = document.getElementById('tabla-series-contenedor');
     const tbodySeries = document.getElementById('tbody-series');
+
+    // ... conserva tus variables existentes arriba ...
+    const selectModelo = document.getElementById('modelo');
+    const inputRam = document.getElementById('memoria_ram');
+    const inputDisco = document.getElementById('disco');
+
+    // Capturar los contenedores form-group para poder ocultarlos por completo
+    const contenedorRam = inputRam.closest('.form-group');
+    const contenedorDisco = inputDisco.closest('.form-group');
+
+    selectModelo.addEventListener('change', function() {
+        const opcionSeleccionada = this.options[this.selectedIndex];
+        const tipoProducto = opcionSeleccionada.getAttribute('data-producto');
+
+        if (tipoProducto === 'MONITOR') {
+            // Ocultar de la vista de forma limpia
+            contenedorRam.classList.add('d-none');
+            contenedorDisco.classList.add('d-none');
+            
+            // Retirar obligatoriedad para que el formulario permita guardar
+            inputRam.removeAttribute('required');
+            inputDisco.removeAttribute('required');
+            
+            // Limpiar remanentes de texto
+            inputRam.value = '';
+            inputDisco.value = '';
+        } else {
+            
+            contenedorRam.classList.remove('d-none');
+            contenedorDisco.classList.remove('d-none');
+            
+            inputRam.setAttribute('required', 'true');
+            inputDisco.setAttribute('required', 'true');
+        }
+    });
 
     checkboxMasivo.addEventListener('change', function() {
         if (this.checked) {

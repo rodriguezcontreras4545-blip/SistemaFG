@@ -12,12 +12,17 @@ def ingreso_inventario(request):
         modelo_id = request.POST.get('modelo')
         fecha_ingreso = request.POST.get('fecha_ingreso')
         n_guia_ingreso = request.POST.get('n_guia_ingreso')
-        historial = request.POST.get('historial', 'NOMINAL')
+        historial = request.POST.get('historial', 'NORMAL')
         estado_grado = request.POST.get('estado_grado')
         lote = request.POST.get('lote')
-        memoria_ram = request.POST.get('memoria_ram')
-        disco = request.POST.get('disco')
         observacion = request.POST.get('observacion')
+
+        # 👇 CAMBIO 1: Captura limpia y segura de RAM y Disco (Soporte para Monitores/CPUs)
+        memoria_ram = request.POST.get('memoria_ram')
+        disco = request.POST.get('disco', '').strip() or None
+
+        # Convertir RAM a entero solo si el operador escribió un número (si viene vacío, guarda None)
+        memoria_ram = int(memoria_ram) if memoria_ram and memoria_ram.isdigit() else None
 
         # Detectar si el checkbox de ingreso masivo fue seleccionado
         es_masivo = request.POST.get('es_masivo') == 'on'
@@ -57,15 +62,15 @@ def ingreso_inventario(request):
                         historial=historial,
                         estado_grado=estado_grado,
                         lote=lote,
-                        memoria_ram=int(memoria_ram),
-                        disco=disco,
+                        memoria_ram=memoria_ram,  # 👇 CAMBIO 2: Pasamos la variable ya procesada (puede ser número o None)
+                        disco=disco,              # 👇 Guarda texto o None si es un Monitor
                         observacion=observacion,
                         en_stock=True
                     )
             
-            # Si el bucle termina sin errores, notificamos el éxito
+            # 👇 CAMBIO 3: Mensaje popup personalizado de éxito para el lote
             cantidad_registrada = len([s for s in series_a_procesar if s.strip()])
-            messages.success(request, f"¡Éxito! Se registraron correctamente {cantidad_registrada} equipos en el inventario.")
+            messages.success(request, f"¡Lote de Importación Procesado! Se cargaron con éxito {cantidad_registrada} unidades bajo la Guía N° {n_guia_ingreso or 'S/N'}.")
             return redirect('ingreso_inventario')
 
         except IntegrityError:

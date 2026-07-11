@@ -5,43 +5,44 @@ from django.db import models
 from django.core.exceptions import ValidationError
 
 class ModeloEquipo(models.Model):
-    producto = models.CharField(max_length=100, default='LAPTOP')
+    # 1. Definimos los nuevos tipos de producto requeridos
+    PRODUCTO_CHOICES = [
+        ('LAPTOP', 'Laptop'),
+        ('CPU', 'CPU / Computadora'),
+        ('AIO', 'All-in-One'),
+        ('MONITOR', 'Monitor'),
+    ]
+    producto = models.CharField(max_length=50, choices=PRODUCTO_CHOICES, default='LAPTOP')
     marca = models.CharField(max_length=100)
     modelo = models.CharField(max_length=150)
-    tamano = models.CharField(max_length=20, verbose_name="Tamaño")
+    tamano = models.CharField(max_length=20, verbose_name="Tamaño", blank=True, null=True)
     generacion = models.CharField(max_length=50, blank=True, null=True)
     procesador = models.CharField(max_length=50, blank=True, null=True)
     velocidad = models.CharField(max_length=50, blank=True, null=True)
 
     class Meta:
-        db_table = 'modelos_equipos' # Se conecta exacto a tu tabla de MySQL
+        db_table = 'modelos_equipos'
         verbose_name = "Modelo de Equipo"
         verbose_name_plural = "Catálogo de Modelos"
         unique_together = ('marca', 'modelo', 'procesador', 'velocidad')
 
     def __str__(self):
-        return f"{self.marca} {self.modelo} ({self.procesador} - {self.velocidad}GHz)"
+        return f"[{self.get_producto_display()}] {self.marca} {self.modelo} {self.procesador or ''}"
 
 
 class Equipo(models.Model):
-    ESTADO_CHOICES = [
-        ('GRADO A', 'Grado A'),
-        ('GRADO B', 'Grado B'),
-        ('GRADO C', 'Grado C'),
-        ('GRADO D', 'Grado D'),
-        ('GRADO M', 'Grado M'),
-    ]
-    
-    modelo = models.ForeignKey(ModeloEquipo, on_delete=models.RESTRICT, db_column='modelo_id')
+    modelo = models.ForeignKey(ModeloEquipo, on_delete=models.CASCADE)
     numero_serie = models.CharField(max_length=100, unique=True)
     fecha_ingreso = models.DateField()
-    n_guia_ingreso = models.CharField(max_length=50, blank=True, null=True)
-    historial = models.CharField(max_length=50, default='NORMAL')
-    estado_grado = models.CharField(max_length=50, choices=ESTADO_CHOICES)
+    n_guia_ingreso = models.CharField(max_length=100, blank=True, null=True)
+    historial = models.CharField(max_length=100, default='NOMINAL')
+    estado_grado = models.CharField(max_length=50)
     lote = models.CharField(max_length=100, blank=True, null=True)
     
-    memoria_ram = models.IntegerField()
-    disco = models.CharField(max_length=100)
+    # 2. Hacemos estos campos opcionales para dar soporte a Monitores
+    memoria_ram = models.IntegerField(blank=True, null=True)
+    disco = models.CharField(max_length=100, blank=True, null=True)
+    
     observacion = models.TextField(blank=True, null=True)
     en_stock = models.BooleanField(default=True)
 

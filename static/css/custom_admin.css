@@ -1,0 +1,94 @@
+/* Paleta Oficial FICA GROUP */
+:root {
+    --fica-blue: #0000B3;       /* El azul real profundo del círculo */
+    --fica-white: #FFFFFF;      /* El blanco de la F */
+    --fica-dark: #1A1A24;       /* Gris grafito oscuro para contraste elegante */
+}
+
+/* ==========================================================================
+   1. BARRA SUPERIOR (NAVBAR) - FORZAR COLOR AZUL REAL
+   ========================================================================== */
+/* Usamos la jerarquía del body para ganarle a cualquier clase nativa del tema */
+body nav.main-header,
+body .main-header.navbar,
+body .navbar-expand,
+body .navbar-light,
+body .navbar-white {
+    background-color: var(--fica-blue) !important;
+    border-bottom: 2px solid var(--fica-white) !important;
+}
+
+/* FORZAR QUE TODOS LOS TEXTOS E ÍCONOS DE LA BARRA SEAN BLANCOS PUDIENTES */
+body nav.main-header .nav-link,
+body nav.main-header .nav-link i,
+body nav.main-header .navbar-nav .nav-link,
+body nav.main-header .navbar-nav .nav-item a {
+    color: var(--fica-white) !important;
+}
+
+/* 🌟 BOTÓN DEL USUARIO (JOAN) - ESTILO PÍLDORA VISIBLE 🌟 */
+body .navbar-nav .user-menu .nav-link,
+body nav.main-header .navbar-nav .user-menu a.nav-link,
+body nav.main-header .navbar-nav .dropdown-toggle {
+    background-color: rgba(255, 255, 255, 0.25) !important; /* Fondo blanco translúcido */
+    color: var(--fica-white) !important;                     /* Texto blanco puro */
+    border: 1px solid var(--fica-white) !important;          /* Borde blanco definido */
+    padding: 5px 16px !important;
+    border-radius: 30px !important;
+    font-weight: bold !important;
+    display: inline-block !important;
+}
+
+/* Efecto al pasar el mouse sobre tu usuario */
+body .navbar-nav .user-menu .nav-link:hover {
+    background-color: var(--fica-white) !important;
+    color: var(--fica-blue) !important;
+}
+
+/* ==========================================================================
+   2. PANTALLA DE INICIO DE SESIÓN (LOGIN CORREGIDO)
+   ========================================================================== */
+.login-page {
+    background: linear-gradient(135deg, var(--fica-dark) 0%, #0c0c12 100%) !important;
+}
+
+.login-logo img {
+    max-width: 180px !important;
+    height: auto !important;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    background-color: var(--fica-white);
+}
+
+.login-box {
+    width: 380px !important;
+}
+
+.login-box .card {
+    border-top: 5px solid var(--fica-blue) !important;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* ==========================================================================
+   3. BARRA LATERAL (SIDEBAR)
+   ========================================================================== */
+.brand-link, .brand-link:hover {
+    background-color: var(--fica-blue) !important;
+    color: var(--fica-white) !important;
+    border-bottom: 2px solid var(--fica-white) !important;
+}
+
+.main-sidebar {
+    background-color: var(--fica-dark) !important;
+}
+
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active {
+    background-color: var(--fica-blue) !important;
+    color: var(--fica-white) !important;
+}
+
+.btn-primary, .btn-info {
+    background-color: var(--fica-blue) !important;
+    border-color: var(--fica-blue) !important;
+}

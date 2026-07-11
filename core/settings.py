@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -85,7 +87,7 @@ DATABASES = {
         'NAME': 'bd_inventario_reacondicionados',
         'USER': 'joan_admin',                 # El nuevo usuario
         'PASSWORD': '5672',         # La contraseña que le asignamos
-        'HOST': '192.168.1.200',
+        'HOST': '192.168.1.31',
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
@@ -94,12 +96,15 @@ DATABASES = {
 }
 
 JAZZMIN_SETTINGS = {
-    "site_title": "Sistema de Inventario FICA",
-    "site_header": "Inventario FICA",
-    "site_brand": "FICAGROUP",
-    "welcome_sign": "Bienvenido al Sistema de Control de Inventario",
-    "copyright": "FICAGROUP S.A.C.",
-    "search_model": ["inventario.Equipo"],
+    "site_title": "FICA GROUP Inventario",
+    "site_header": "FICA GROUP",
+    "site_brand": "FICA GROUP",
+    "site_logo": "img/logoFICA.jpeg",
+    "login_logo": "img/logoFICA.jpeg",
+    "site_logo_classes": "img-circle elevation-2",
+    "welcome_sign": "Bienvenido al Sistema de Inventario FICA GROUP",
+    "copyright": "FICA GROUP S.A.C.",
+    "search_model": ["inventario.Equipment"],
     "icons": {
         "auth.user": "fas fa-users",
         "inventario.modeloequipo": "fas fa-laptop-code",
@@ -107,20 +112,21 @@ JAZZMIN_SETTINGS = {
         "inventario.salida": "fas fa-truck-loading",
     },
     "order_with_respect_to": ["inventario", "auth"],
-
+    
+    # 🚀 ENLACE AL CSS PERSONALIZADO FICA 🚀
+    "custom_css": "css/custom_admin.css",
 }
 
+# Deja este bloque limpio para que le ceda el control total a tu archivo CSS
 JAZZMIN_UI_TWEAKS = {
-    "theme": "flatly",          # Un tema limpio y corporativo
-    "dark_mode_theme": "darkly", # Activa automáticamente un modo oscuro elegante
+    "theme": "default", 
     "navbar_small_text": False,
     "footer_small_text": False,
     "body_small_text": False,
     "brand_small_text": False,
-    "brand_colour": "navbar-dark",
-    "accent": "action-primary",
-    "navbar": "navbar-dark bg-dark",
-    "no_navbar_border": True,
+    "brand_colour": False,
+    "navbar": "navbar-dark",
+    "no_navbar_border": False,
     "sidebar": "sidebar-dark-primary",
     "sidebar_nav_child_indent": True,
 }
@@ -159,4 +165,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+
+# Añade esta línea para que Django encuentre tu logo
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
